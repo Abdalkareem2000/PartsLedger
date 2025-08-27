@@ -1,7 +1,7 @@
 ﻿var GetRecords = {
     onStart: function () {
         GetRecords.getData();
-
+        toastr.options.positionClass = 'toast-top-center';
         // زر البحث
         $('#applyFilters').on('click', function () {
             $('#pageNumber').val(1);
@@ -64,10 +64,10 @@
         // When user clicks OK
         $('#confirmDecrease').on('click', function () {
             const id = $('#recordId').val();
-            const decreaseQuantity = parseInt($('#decreaseQuantity').val(), 10);
+            const decreaseQuantity = parseFloat($('#decreaseQuantity').val());
             const currentQuantity = parseInt($('#currentQuantity').val(), 10);
 
-            if (!decreaseQuantity || decreaseQuantity <= 0) {
+            if (isNaN(decreaseQuantity) || decreaseQuantity <= 0 || !Number.isInteger(decreaseQuantity)) {
                 toastr.error('Please enter a valid quantity.');
                 return;
             }
@@ -103,19 +103,31 @@
             $('#increaseQtyModal').modal('show');
         });
 
+        $('#decreaseQtyModal').on('hidden.bs.modal', function () {
+            $('#decreaseQuantity').val('');
+        });
+
+        $('#increaseQtyModal').on('hidden.bs.modal', function () {
+            $('#increaseQuantity').val('');
+            $('#increaseUnitPrice').val('');
+            $('#increaseSource').val('');
+            $('#increaseRecordId').val('');
+        });
+
+
         // Handle confirm button
         $('#confirmIncrease').on('click', function () {
             const id = $('#increaseRecordId').val();
-            const quantity = parseInt($('#increaseQuantity').val(), 10);
+            const quantity = parseFloat($('#increaseQuantity').val());
             const unitPrice = parseFloat($('#increaseUnitPrice').val());
             const source = $('#increaseSource').val();
 
-            if (!quantity || quantity <= 0) {
+            if (isNaN(quantity) || quantity <= 0 || !Number.isInteger(quantity)) {
                 toastr.error('Please enter a valid quantity.');
                 return;
             }
             if (!unitPrice || unitPrice <= 0) {
-                toastr.error('Please enter a valid unitPrice.');
+                toastr.error('Please enter a valid Unit Price.');
                 return;
             }
             if (!source) {
@@ -175,9 +187,9 @@
                         '<td>' + r.totalUSD.toFixed(2) + '</td>' +
                         '<td>' +
                         '<a href="/Records/Edit/' + r.id + '" class="btn btn-sm btn-primary me-2"><i class="fas fa-edit"></i></a>' +
-                        '<button class="btn btn-sm btn-danger delete-record me-2" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' +
                         '<button class="btn btn-sm btn-warning decrease-qty" data-id="' + r.id + '" data-quantity="' + r.quantity + '"><i class="fas fa-minus"></i></button>  ' + 
                         '<button class="btn btn-sm btn-success increase-qty" data-id="' + r.id + '"><i class="fas fa-plus"></i></button>' +
+                        '<button class="btn btn-sm btn-danger delete-record me-2" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' +
                         '</td>'
                         '</tr>';
                     tbody.append(row);

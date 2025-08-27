@@ -145,7 +145,5 @@ namespace Web.Controllers
             await _repository.IncreaseQuantity(id, quantity, unitPrice, source);
             return Ok();
         }
-
-
     }
 }
