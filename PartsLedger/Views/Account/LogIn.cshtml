@@ -1,0 +1,47 @@
+﻿@model Web.Models.LoginViewModel
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link href="~/css/records/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="login-container" style="margin-top: 60px;">
+        <!-- Left Panel -->
+        <div class="left-panel text-center">
+            <div class="find-your">
+                <img class="logo" <img src="~/images/records.jpg" />
+            </div>
+        </div>
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <form asp-action="LogIn" asp-controller="Account" method="post" class="login-form" novalidate>
+                <h3 class="text-center mb-4">Login</h3>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" value="@TempData["Password"]" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+                </div>
+
+                <button type="submit" class="btn btn-custom" style="border: 2px solid #ff69b4;">LOG IN</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Records";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="~/js/records/index.js"></script>
+<div class="container">
+    <br />
+    <h1 class="text-left" style="text-align: center;">
+        Commerical Invoice
+    </h1>
+    <br />
+
+    <div class="card p-4">
+        <h4>Search by</h4>
+        <form id="searchForm">
+            <div class="row gy-4">
+                <div class="col-md-3">
+                    <input type="text" id="filterFCNo" class="form-control" placeholder="FC No" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" id="filterProduct" class="form-control" placeholder="Product" />
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary" id="applyFilters">Search</button> | <button type="button" class="btn btn-default" id="resetFilters">Reset</button>
+                </div>
+
+                <div class="col-md-3">
+                    <a href="/Records/Create" class="btn btn-success">Create Record</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <section class="section mt-3">
+        <div class="card p-4">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>FC No</th>
+                            <th>OEM</th>
+                            <th>Product</th>
+                            <th>Model</th>
+                            <th>EngineCode</th>
+                            <th>FOB Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <input type="hidden" id="pageNumber" />
+    <div class="d-flex justify-content-center mt-3 gap-2">
+        <a class="btn btn-outline-success" id="previousPage">Previous</a>
+        <a class="btn btn-outline-success" id="nextPage">Next</a>
+    </div>
+    <div class="d-flex justify-content-center mt-2 gap-2">
+        <div id="divPageNumber" style="font-weight: bold; color: #333;">Page No: </div>
+        <div id="totalPage" style="font-weight: bold; color: #333;">Pages: </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        GetRecords.onStart();
+    });
+</script>
