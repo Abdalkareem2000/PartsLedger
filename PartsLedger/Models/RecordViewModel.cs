@@ -23,7 +23,7 @@ namespace Web.Models
         public string EngineCode { get; set; }
 
         [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "FOB Price must be greater than 0.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "FOB UnitPrice must be greater than 0.")]
         public decimal FOBPrice { get; set; }
 
         [Required]

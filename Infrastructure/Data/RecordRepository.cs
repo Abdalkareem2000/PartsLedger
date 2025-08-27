@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Enums;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -52,6 +53,68 @@ namespace Infrastructure.Data
         public IQueryable<Record> GetAllAsQueryable()
         {
             return _context.Records.AsQueryable();
+        }
+
+        public async Task DecreaseQuantity(int id, int quantity)
+        {
+            var record = await _context.Records.FirstOrDefaultAsync(r => r.Id == id);
+            if (record == null)
+            {
+                return ;
+            }
+
+            if (record.Quantity < quantity)
+            {
+                return;
+            }
+
+            var recordLog = new RecordLog
+            {
+                RecordId = record.Id,
+                Action = (int)RecordAction.Decreasing,
+                Timestamp = DateTime.Now,
+                Quantity = -quantity,
+                Source = "System",
+                UnitPrice = record.UnitPrice
+            };
+
+            record.CalculateUnitPrice(totalPrice: record.TotalPrice - record.UnitPrice * quantity,
+                quantity: record.Quantity - quantity);
+
+            await _context.RecordLogs.AddAsync(recordLog);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task IncreaseQuantity(int id, int quantity, decimal unitPrice, string source)
+        {
+            if (quantity <= 0 || unitPrice <= 0 || string.IsNullOrEmpty(source))
+            {
+                return;
+            }
+
+            var record = await _context.Records.FirstOrDefaultAsync(r => r.Id == id);
+            if (record == null)
+            {
+                return;
+            }
+
+            var recordLog = new RecordLog
+            {
+                RecordId = record.Id,
+                Action = (int)RecordAction.Increasing,
+                Timestamp = DateTime.Now,
+                Quantity = quantity,
+                Source = source,
+                UnitPrice = record.UnitPrice
+            };
+
+            record.CalculateUnitPrice(totalPrice: record.TotalPrice + unitPrice * quantity,
+                quantity: record.Quantity + quantity);
+
+            await _context.RecordLogs.AddAsync(recordLog);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

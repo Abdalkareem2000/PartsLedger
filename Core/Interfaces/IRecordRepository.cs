@@ -18,6 +18,7 @@ namespace Core.Interfaces
         Task DeleteAsync(int id);
 
         IQueryable<Record> GetAllAsQueryable();
-      
+        Task DecreaseQuantity(int id, int quentity);
+        Task IncreaseQuantity(int id, int quantity, decimal unitPrice, string source);
     }
 }

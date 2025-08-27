@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
@@ -24,36 +26,36 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-            public async Task<IActionResult> GetRecords(string fcno, string product, int? pageNumber)
+        public async Task<IActionResult> GetRecords(string fcno, string product, int? pageNumber)
+        {
+            var records = await _repository.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(fcno))
             {
-                var records = await _repository.GetAllAsync();
+                records = records.Where(r => r.FCNo.Contains(fcno, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(fcno))
-                {
-                    records = records.Where(r => r.FCNo.Contains(fcno, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
-
-                if (!string.IsNullOrEmpty(product))
-                {
-                    records = records.Where(r => r.Product.Contains(product, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
+            if (!string.IsNullOrEmpty(product))
+            {
+                records = records.Where(r => r.Product.Contains(product, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             var paginated = PaginatedList<Record>.CreateAsync(records, pageNumber ?? 1);
             if (!paginated.Any())
-                {
-                    paginated = PaginatedList<Record>.CreateAsync(records, 1);
-                }
-
-                return Ok(new
-                {
-                    Records = paginated,
-                    PageIndex = paginated.PageIndex,
-                    PageSize = paginated.PageSize,
-                    TotalPages = paginated.TotalPages,
-                    HasPreviousPage = paginated.HasPreviousPage,
-                    HasNextPage = paginated.HasNextPage
-                });
+            {
+                paginated = PaginatedList<Record>.CreateAsync(records, 1);
             }
+
+            return Ok(new
+            {
+                Records = paginated,
+                PageIndex = paginated.PageIndex,
+                PageSize = paginated.PageSize,
+                TotalPages = paginated.TotalPages,
+                HasPreviousPage = paginated.HasPreviousPage,
+                HasNextPage = paginated.HasNextPage
+            });
+        }
         [HttpGet]
         public IActionResult Create()
         {
@@ -70,12 +72,12 @@ namespace Web.Controllers
             var record = new Record
             {
                 FCNo = e.FCNo,
-                OEM = e.OEM,        
+                OEM = e.OEM,
                 Product = e.Product,
                 Model = e.Model,
                 EngineCode = e.EngineCode,
                 FOBPrice = e.FOBPrice,
-                Quantity = e.Quantity,
+                //Quantity = e.Quantity,
                 TotalUSD = e.FOBPrice * e.Quantity
             };
 
@@ -100,7 +102,7 @@ namespace Web.Controllers
                 Model = record.Model,
                 EngineCode = record.EngineCode,
                 FOBPrice = record.FOBPrice,
-                Quantity = record.Quantity
+                //Quantity = record.Quantity
             };
 
             return View(model);
@@ -123,7 +125,7 @@ namespace Web.Controllers
             record.Model = e.Model;
             record.EngineCode = e.EngineCode;
             record.FOBPrice = e.FOBPrice;
-            record.Quantity = e.Quantity;
+            //record.Quantity = e.Quantity;
             record.TotalUSD = e.FOBPrice * e.Quantity;
 
             await _repository.UpdateAsync(record);
@@ -137,5 +139,21 @@ namespace Web.Controllers
             await _repository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DecreaseQuantity(int id, int quantity)
+        {
+            await _repository.DecreaseQuantity(id, quantity);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> IncreaseQuantity(int id, int quantity, decimal unitPrice, string source)
+        {
+            await _repository.IncreaseQuantity(id, quantity, unitPrice, source);
+            return Ok();
+        }
+
+
     }
 }

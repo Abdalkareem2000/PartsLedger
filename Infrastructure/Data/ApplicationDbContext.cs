@@ -13,6 +13,7 @@ namespace Infrastructure.Data
         }
 
         public DbSet<Record> Records { get; set; }
+        public DbSet<RecordLog> RecordLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

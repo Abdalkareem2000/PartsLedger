@@ -48,6 +48,101 @@
                 });
             }
         });
+
+        // Open modal when decrease button is clicked
+        $('body').on('click', '.decrease-qty', function () {
+            const id = $(this).data('id');
+            const currentQuantity = $(this).data('quantity');
+
+            $('#recordId').val(id);
+            $('#currentQuantity').val(currentQuantity); // hidden field to store quantity
+            $('#decreaseAmount').val('');
+            $('#decreaseQtyModal').modal('show');
+        });
+
+
+        // When user clicks OK
+        $('#confirmDecrease').on('click', function () {
+            const id = $('#recordId').val();
+            const decreaseQuantity = parseInt($('#decreaseQuantity').val(), 10);
+            const currentQuantity = parseInt($('#currentQuantity').val(), 10);
+
+            if (!decreaseQuantity || decreaseQuantity <= 0) {
+                toastr.error('Please enter a valid quantity.');
+                return;
+            }
+
+            if (decreaseQuantity > currentQuantity) {
+                toastr.error('Decrease amount cannot be greater than current quantity (' + currentQuantity + ').');
+                return;
+            }
+
+            $.ajax({
+                url: '/Records/DecreaseQuantity',
+                type: 'POST',
+                data: { id: id, quantity: decreaseQuantity },
+                success: function () {
+                    $('#decreaseQtyModal').modal('hide');
+                    toastr.success('Quantity decreased successfully.');
+                    GetRecords.getData();
+                },
+                error: function () {
+                    toastr.error('Error decreasing quantity.');
+                }
+            });
+        });
+
+
+        // Open modal for increase
+        $('body').on('click', '.increase-qty', function () {
+            const id = $(this).data('id');
+            $('#increaseRecordId').val(id);
+            $('#increaseQuantity').val('');
+            $('#increaseUnitPrice').val('');
+            $('#increaseSource').val('');
+            $('#increaseQtyModal').modal('show');
+        });
+
+        // Handle confirm button
+        $('#confirmIncrease').on('click', function () {
+            const id = $('#increaseRecordId').val();
+            const quantity = parseInt($('#increaseQuantity').val(), 10);
+            const unitPrice = parseFloat($('#increaseUnitPrice').val());
+            const source = $('#increaseSource').val();
+
+            if (!quantity || quantity <= 0) {
+                toastr.error('Please enter a valid quantity.');
+                return;
+            }
+            if (!unitPrice || unitPrice <= 0) {
+                toastr.error('Please enter a valid unitPrice.');
+                return;
+            }
+            if (!source) {
+                toastr.error('Please enter the source.');
+                return;
+            }
+
+            $.ajax({
+                url: '/Records/IncreaseQuantity',
+                type: 'POST',
+                data: {
+                    id: id,
+                    quantity: quantity,
+                    unitPrice: unitPrice,
+                    source: source
+                },
+                success: function () {
+                    $('#increaseQtyModal').modal('hide');
+                    toastr.success('Quantity increased successfully.');
+                    GetRecords.getData();
+                },
+                error: function () {
+                    toastr.error('Error increasing quantity.');
+                }
+            });
+        });
+
     },
 
     getData: function () {
@@ -80,8 +175,10 @@
                         '<td>' + r.totalUSD.toFixed(2) + '</td>' +
                         '<td>' +
                         '<a href="/Records/Edit/' + r.id + '" class="btn btn-sm btn-primary me-2"><i class="fas fa-edit"></i></a>' +
-                        '<button class="btn btn-sm btn-danger delete-record" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' +
-                        '</td>' +
+                        '<button class="btn btn-sm btn-danger delete-record me-2" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' +
+                        '<button class="btn btn-sm btn-warning decrease-qty" data-id="' + r.id + '" data-quantity="' + r.quantity + '"><i class="fas fa-minus"></i></button>  ' + 
+                        '<button class="btn btn-sm btn-success increase-qty" data-id="' + r.id + '"><i class="fas fa-plus"></i></button>' +
+                        '</td>'
                         '</tr>';
                     tbody.append(row);
                 });

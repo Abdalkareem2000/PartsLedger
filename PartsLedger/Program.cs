@@ -82,7 +82,7 @@ namespace PartsLedger
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Records}/{action=Index}/{id?}");
 
             app.Run();
         }

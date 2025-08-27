@@ -68,6 +68,56 @@
         <div id="totalPage" style="font-weight: bold; color: #333;">Pages: </div>
     </div>
 </div>
+<div class="modal fade" id="decreaseQtyModal" tabindex="-1" aria-labelledby="decreaseQtyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="decreaseQtyModalLabel">Sold Quantity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="number" id="decreaseQuantity" class="form-control" placeholder="Enter quantity to sold" min="1" />
+                <input type="hidden" id="recordId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmDecrease">OK</button>
+            </div>
+            <input type="hidden" id="currentQuantity" />
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="increaseQtyModal" tabindex="-1" aria-labelledby="increaseQtyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="increaseQtyModalLabel">Increase Quantity</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label>Quantity</label>
+            <input type="number" id="increaseQuantity" class="form-control" placeholder="Enter quantity" min="1" />
+        </div>
+        <div class="mb-3">
+            <label>Price</label>
+            <input type="number" id="increaseUnitPrice" class="form-control" placeholder="Enter Unit Price" step="0.01" />
+        </div>
+        <div class="mb-3">
+            <label>Source</label>
+            <input type="text" id="increaseSource" class="form-control" placeholder="Enter source" />
+        </div>
+        <input type="hidden" id="increaseRecordId" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmIncrease">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script>
     $(document).ready(function () {
