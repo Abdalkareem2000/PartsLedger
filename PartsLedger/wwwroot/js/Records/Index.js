@@ -168,6 +168,13 @@
                     toastr.error('Error increasing quantity.');
                 }
             });
+
+        });
+
+        $('body').on('click', '.logs-btn', function () {
+            const recordId = $(this).data('id');
+            // Redirect to another view, passing the ID
+            window.location.href = '/Records/RecordLogs/' + recordId;
         });
 
     },
@@ -204,7 +211,8 @@
                         '<a href="/Records/Edit/' + r.id + '" class="btn btn-sm btn-primary me-2"><i class="fas fa-edit"></i></a>' +
                         '<button class="btn btn-sm btn-warning decrease-qty" data-id="' + r.id + '" data-quantity="' + r.quantity + '"><i class="fas fa-minus"></i></button>  ' + 
                         '<button class="btn btn-sm btn-success increase-qty" data-id="' + r.id + '"><i class="fas fa-plus"></i></button> ' +
-                        '<button class="btn btn-sm btn-danger delete-record" data-id="' + r.id + '" data-name="' + r.product + '">  <i class="fas fa-trash-alt"></i></button>'
+                        '<button class="btn btn-sm btn-info logs-btn" data-id="' + r.id + '"> <i class="fas fa-list"></i></button> ' +
+                        '<button class="btn btn-sm btn-danger delete-record" data-id="' + r.id + '" data-name="' + r.product + '">  <i class="fas fa-trash-alt"></i></button> ' +
                         '</td>'
                         '</tr>';
                     tbody.append(row);

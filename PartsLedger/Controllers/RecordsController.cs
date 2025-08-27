@@ -56,6 +56,49 @@ namespace Web.Controllers
                 HasNextPage = paginated.HasNextPage
             });
         }
+
+        public IActionResult RecordLogs(int id)
+        {
+            if(id < 0)
+            {
+                return BadRequest("Invalid record ID.");
+            }
+            return View(id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRecordLogs(int recoredId, int? pageNumber, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            if(recoredId < 0)
+            {
+                return BadRequest("Invalid record ID.");
+            }
+
+            var recordLogs = await _repository.GetRecordLogs(recoredId);
+
+            if (fromDate.HasValue)
+                recordLogs = recordLogs.Where(x => x.Timestamp.Date >= fromDate.Value.Date);
+
+            if (toDate.HasValue)
+                recordLogs = recordLogs.Where(x => x.Timestamp.Date <= toDate.Value.Date);
+
+            var paginated = PaginatedList<RecordLog>.CreateAsync(recordLogs, pageNumber ?? 1);
+            if (!paginated.Any())
+            {
+                paginated = PaginatedList<RecordLog>.CreateAsync(recordLogs, 1);
+            }
+
+            return Ok(new
+            {
+                Records = paginated,
+                PageIndex = paginated.PageIndex,
+                PageSize = paginated.PageSize,
+                TotalPages = paginated.TotalPages,
+                HasPreviousPage = paginated.HasPreviousPage,
+                HasNextPage = paginated.HasNextPage
+            });
+        }
+
         [HttpGet]
         public IActionResult Create()
         {

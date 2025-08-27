@@ -110,7 +110,7 @@ namespace Infrastructure.Data
                 QuantityBefore = record.Quantity,
                 QuantityAfter = record.Quantity + quantity,
                 Source = source,
-                UnitPrice = record.FOBPrice
+                UnitPrice = unitPrice
             };
 
             record.CalculateUnitPrice(totalPrice: record.TotalUSD + unitPrice * quantity,
@@ -119,6 +119,11 @@ namespace Infrastructure.Data
             await _context.RecordLogs.AddAsync(recordLog);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<RecordLog>> GetRecordLogs(int recordId)
+        {
+            return await _context.RecordLogs.Where(e => e.RecordId == recordId).ToListAsync();
         }
     }
 }

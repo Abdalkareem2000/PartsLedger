@@ -1,0 +1,143 @@
+﻿@model int
+@{
+    ViewData["Title"] = "RecordLogs";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="~/js/records/RecordLogs.js"></script>
+<div class="container">
+    <br />
+    <a asp-action="Index" class="btn btn-secondary">Back to Index</a>
+    <h1 class="text-left" style="text-align: center;">
+        Record Logs
+    </h1>
+    <br />
+    <input type="hidden" id="recordId" value="@Model" />
+    <div class="card p-4">
+        <h4>Search by</h4>
+        <form id="searchForm">
+            <div class="row gy-4">
+                <div class="col-md-3">
+                    <label>From Date</label>
+                    <input type="date" id="filterFromDate" class="form-control" placeholder="From Date" />
+                </div>
+                <div class="col-md-3">
+                    <label>To Date</label>
+                    <input type="date" id="filterToDate" class="form-control" placeholder="To Date" />
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <button type="button" class="btn btn-primary" id="applyFilters">Search</button> | <button type="button" class="btn btn-default" id="resetFilters">Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <section class="section mt-3">
+        <div class="card p-4">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Action</th>
+                            <th>Date Time</th>
+                            <th>Transaction</th>
+                            <th>Unit Price</th>
+                            <th>Quentity Before</th>
+                            <th>Quentity After</th>
+                            <th>Updated By</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordLogsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <input type="hidden" id="pageNumber" />
+    <div class="d-flex justify-content-center mt-3 gap-2">
+        <a class="btn btn-outline-success" id="previousPage">Previous</a>
+        <a class="btn btn-outline-success" id="nextPage">Next</a>
+    </div>
+    <div class="d-flex justify-content-center mt-2 gap-2">
+        <div id="divPageNumber" style="font-weight: bold; color: #333;">Page No: </div>
+        <div id="totalPage" style="font-weight: bold; color: #333;">Pages: </div>
+    </div>
+</div>
+<div class="modal fade" id="decreaseQtyModal" tabindex="-1" aria-labelledby="decreaseQtyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="decreaseQtyModalLabel">Sold Quantity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="number" id="decreaseQuantity" class="form-control" placeholder="Enter quantity to sold" min="1" />
+                <input type="hidden" id="recordId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmDecrease">OK</button>
+            </div>
+            <input type="hidden" id="currentQuantity" />
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="increaseQtyModal" tabindex="-1" aria-labelledby="increaseQtyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="increaseQtyModalLabel">Increase Quantity</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label>Quantity</label>
+            <input type="number" id="increaseQuantity" class="form-control" placeholder="Enter quantity" min="1" />
+        </div>
+        <div class="mb-3">
+            <label>UnitPrice</label>
+            <input type="number" id="increaseUnitPrice" class="form-control" placeholder="Enter Unit Price" step="0.01" />
+        </div>
+        <div class="mb-3">
+            <label>Update By</label>
+                    <input type="text" id="increaseSource" class="form-control" placeholder="Update By" />
+        </div>
+        <input type="hidden" id="increaseRecordId" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmIncrease">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this record?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        RecordLogs.onStart();
+    });
+</script>

@@ -20,5 +20,6 @@ namespace Core.Interfaces
         IQueryable<Record> GetAllAsQueryable();
         Task DecreaseQuantity(int id, int quentity);
         Task IncreaseQuantity(int id, int quantity, decimal unitPrice, string source);
+        Task<IEnumerable<RecordLog>> GetRecordLogs(int recordId);
     }
 }
