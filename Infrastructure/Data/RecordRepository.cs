@@ -74,11 +74,13 @@ namespace Infrastructure.Data
                 Action = (int)RecordAction.Decreasing,
                 Timestamp = DateTime.Now,
                 Quantity = -quantity,
+                QuantityBefore = record.Quantity,
+                QuantityAfter = record.Quantity - quantity,
                 Source = "System",
-                UnitPrice = record.UnitPrice
+                UnitPrice = record.FOBPrice
             };
 
-            record.CalculateUnitPrice(totalPrice: record.TotalPrice - record.UnitPrice * quantity,
+            record.CalculateUnitPrice(totalPrice: record.TotalUSD - record.FOBPrice * quantity,
                 quantity: record.Quantity - quantity);
 
             await _context.RecordLogs.AddAsync(recordLog);
@@ -105,11 +107,13 @@ namespace Infrastructure.Data
                 Action = (int)RecordAction.Increasing,
                 Timestamp = DateTime.Now,
                 Quantity = quantity,
+                QuantityBefore = record.Quantity,
+                QuantityAfter = record.Quantity + quantity,
                 Source = source,
-                UnitPrice = record.UnitPrice
+                UnitPrice = record.FOBPrice
             };
 
-            record.CalculateUnitPrice(totalPrice: record.TotalPrice + unitPrice * quantity,
+            record.CalculateUnitPrice(totalPrice: record.TotalUSD + unitPrice * quantity,
                 quantity: record.Quantity + quantity);
 
             await _context.RecordLogs.AddAsync(recordLog);

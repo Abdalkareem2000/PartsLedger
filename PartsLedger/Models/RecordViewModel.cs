@@ -21,15 +21,5 @@ namespace Web.Models
 
         [Required(ErrorMessage = "Engine code is required")]
         public string EngineCode { get; set; }
-
-        [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "FOB UnitPrice must be greater than 0.")]
-        public decimal FOBPrice { get; set; }
-
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")]
-        public int Quantity { get; set; }
-
-        public decimal TotalUSD => FOBPrice * Quantity;
     }
 }

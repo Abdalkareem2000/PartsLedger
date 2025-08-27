@@ -75,10 +75,7 @@ namespace Web.Controllers
                 OEM = e.OEM,
                 Product = e.Product,
                 Model = e.Model,
-                EngineCode = e.EngineCode,
-                FOBPrice = e.FOBPrice,
-                //Quantity = e.Quantity,
-                TotalUSD = e.FOBPrice * e.Quantity
+                EngineCode = e.EngineCode
             };
 
             await _repository.AddAsync(record);
@@ -100,9 +97,7 @@ namespace Web.Controllers
                 OEM = record.OEM,
                 Product = record.Product,
                 Model = record.Model,
-                EngineCode = record.EngineCode,
-                FOBPrice = record.FOBPrice,
-                //Quantity = record.Quantity
+                EngineCode = record.EngineCode
             };
 
             return View(model);
@@ -124,9 +119,6 @@ namespace Web.Controllers
             record.Product = e.Product;
             record.Model = e.Model;
             record.EngineCode = e.EngineCode;
-            record.FOBPrice = e.FOBPrice;
-            //record.Quantity = e.Quantity;
-            record.TotalUSD = e.FOBPrice * e.Quantity;
 
             await _repository.UpdateAsync(record);
 

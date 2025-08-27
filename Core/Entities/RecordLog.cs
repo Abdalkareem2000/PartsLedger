@@ -14,6 +14,8 @@ namespace Core.Entities
         public int Action { get; set; } // 0: Created, 1: Updated, 2: Deleted
         public DateTime Timestamp { get; set; }
         public int Quantity { get; set; }
+        public int QuantityBefore { get; set; }
+        public int QuantityAfter { get; set; }
         public string Source { get; set; }
         public decimal UnitPrice { get; set; }
     }
