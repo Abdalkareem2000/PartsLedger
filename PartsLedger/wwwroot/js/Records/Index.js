@@ -30,20 +30,35 @@
             GetRecords.getData();
         });
 
-        // زر الحذف
-        $('body').on('click', '.delete-record', function () {
-            const id = $(this).data('id');
+        let deleteId = null;
 
-            if (confirm('Are you sure you want to delete this record?')) {
+        $('body').on('click', '.delete-record', function () {
+            deleteId = $(this).data('id');
+            const recordName = $(this).data('name');
+
+            // Update modal message with bold record name
+            $('#deleteConfirmModal .modal-body').html(
+                'Are you sure you want to delete <strong>' + recordName + '</strong>?'
+            );
+
+            $('#deleteConfirmModal').modal('show');
+        });
+
+
+        // Handle confirm delete
+        $('#confirmDeleteBtn').on('click', function () {
+            if (deleteId) {
                 $.ajax({
-                    url: '/Records/Delete/' + id,
+                    url: '/Records/Delete/' + deleteId,
                     type: 'POST',
                     success: function () {
-                        alert('Record deleted successfully.');
+                        $('#deleteConfirmModal').modal('hide'); // Hide modal
+                        toastr.success('Record deleted successfully.');
                         GetRecords.getData();
                     },
                     error: function () {
-                        alert('Error deleting record.');
+                        $('#deleteConfirmModal').modal('hide');
+                        toastr.error('Error deleting record.');
                     }
                 });
             }
@@ -131,7 +146,7 @@
                 return;
             }
             if (!source) {
-                toastr.error('Please enter the source.');
+                toastr.error('Please enter Update By.');
                 return;
             }
 
@@ -188,8 +203,8 @@
                         '<td>' +
                         '<a href="/Records/Edit/' + r.id + '" class="btn btn-sm btn-primary me-2"><i class="fas fa-edit"></i></a>' +
                         '<button class="btn btn-sm btn-warning decrease-qty" data-id="' + r.id + '" data-quantity="' + r.quantity + '"><i class="fas fa-minus"></i></button>  ' + 
-                        '<button class="btn btn-sm btn-success increase-qty" data-id="' + r.id + '"><i class="fas fa-plus"></i></button>' +
-                        '<button class="btn btn-sm btn-danger delete-record me-2" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' +
+                        '<button class="btn btn-sm btn-success increase-qty" data-id="' + r.id + '"><i class="fas fa-plus"></i></button> ' +
+                        '<button class="btn btn-sm btn-danger delete-record" data-id="' + r.id + '" data-name="' + r.product + '">  <i class="fas fa-trash-alt"></i></button>'
                         '</td>'
                         '</tr>';
                     tbody.append(row);
